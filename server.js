@@ -45,11 +45,15 @@ app.post('/api/notes', (req, res) => {
         const notes = JSON.parse(data);
         notes.push(newNote);
         fs.writeFile('db/db.json', JSON.stringify(notes, null, 2), (err) => {
-            if (err) throw err;
+            if (err) {
+              console.log(err);
+              return res.status(500).json({ error: 'Failed to write to file' });
+            }
             res.json(newNote);
+          });
+          
         });
     });
-});
 
 app.get('*', (req, res) => {
     res.sendFile(path.join(__dirname, '/public/index.html'));
